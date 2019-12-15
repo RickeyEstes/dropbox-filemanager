@@ -33,9 +33,6 @@ class DropboxClient:
         metadata = self.dbx.files_list_folder(path='', recursive=True)
         for m in metadata.entries:
             if isinstance(m, dropbox.files.FileMetadata):
-                flist.append('{}, {}, {}, {}'.format(
-                                                     m.path_display,
-                                                     m.name,
-                                                     m.client_modified,
-                                                     m.size))
+                flist.append(f'{m.path_display}, {m.name},
+                               {m.client_modified}, {m.size}')
         return flist

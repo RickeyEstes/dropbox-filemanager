@@ -1,7 +1,8 @@
 import os
 
+from PIL import Image, ImageTk
 import tkinter as tk
-from tkinter import filedialog, ttk
+from tkinter import filedialog, messagebox, ttk
 
 from client import DropboxClient
 
@@ -30,14 +31,19 @@ class DropboxUI(DropboxClient):
         self.style = ttk.Style(self.frame)
         self.style.configure('Treeview')
 
+
         # Centralize window
         self.centerWindow()
+        self.dropboxLogo()
+        self.menuBar()
 
         # Buttons intiliazations
         self.btnUpload()
         self.btnLoad()
+        self.btnQuit()
 
     def centerWindow(self):
+        '''Centrslizing the master window'''
         # self.master.winfo_width())  #current window width
         # frame.winfo_height()  current window height
         self.w = 700
@@ -48,21 +54,55 @@ class DropboxUI(DropboxClient):
         y = (sh - self.h) / 2
         self.master.geometry('%dx%d+%d+%d' % (self.w, self.h, x, y))
 
+    def dropboxLogo(self):
+        '''Create a welcome postgreSQL logo'''
+        logo = Image.open("../logo.png")
+        welcome = ImageTk.PhotoImage(logo)
+        welcomeLabel = tk.Label(self.frame, image=welcome)
+        welcomeLabel.image = welcome
+        welcomeLabel.place(relx=0.03, rely=0.8)
+
+    def menuBar(self):
+        '''Creating the menu bar'''
+        menubar = tk.Menu(self.master, font=(self.font, 12))
+        self.master.config(menu=menubar)
+
+        filemenu = tk.Menu(menubar, font=(self.font, 12), tearoff=0)
+        filemenu.add_command(label='Upload Files', command=self.openFiles)
+        filemenu.add_command(label='Load Files', command=self.loadFiles)
+        filemenu.add_separator()
+        filemenu.add_command(label='Quit', command=self.quit)
+        menubar.add_cascade(label='File', menu=filemenu)
+
+        editmenu = tk.Menu(menubar, font=(self.font, 12), tearoff=0)
+        editmenu.add_command(label='Settings', command='')
+        menubar.add_cascade(label='Edit', menu=editmenu)
+
     def btnUpload(self):
+        '''Hnadle upload button'''
         btn = tk.Button(self.frame, text='Upload files', width=10,
                         height=2, relief='raised', bd=2,
-                        font=(self.font, 12), command=self.selectFiles)
+                        font=(self.font, 12), command=self.openFiles)
         btn.place(relx=0.5, rely=0.3, anchor='center')
 
     def btnLoad(self):
+        '''Handle load button'''
         btn = tk.Button(self.frame, text='Load files', width=10,
                         height=2, relief='raised', bd=2,
                         font=(self.font, 12), command=self.loadFiles)
         btn.place(relx=0.5, rely=0.45, anchor='center')
 
-    def selectFiles(self):
+    def btnQuit(self):
+        '''Handle load button'''
+        btn = tk.Button(self.frame, text='Quit', width=6,
+                        height=2, relief='raised', bd=2,
+                        font=(self.font, 10), fg='red', command=self.quit)
+        btn.place(relx=0.92, rely=0.93, anchor='center')
+
+    def openFiles(self):
+        '''Choosing files for uploading'''
         filenames = filedialog.askopenfilenames(
-                                                initialdir='/home/dslackw/     Downloads/',
+                                                initialdir=f'{self.home_dir}',
                                                 multiple=True,
                                                 title='Select files',
                                                 filetypes=[
@@ -74,15 +114,15 @@ class DropboxUI(DropboxClient):
         self.upload(filenames)
 
     def loadFiles(self):
+        '''Loading files from dropbox accound'''
         # Connect to the dropbbox account
+        self.new_top_window = tk.Toplevel()
+        self.new_top_window.iconphoto(False, self.img)
         self.connect()
-        self.new_window = tk.Toplevel()
-        self.new_window.iconphoto(False, self.img)
-
         # Get the files from the dropbox account
         metadata = self.list_files()
         # Creating a tree view table
-        self.tree = ttk.Treeview(self.new_window,
+        self.tree = ttk.Treeview(self.new_top_window,
                                  columns=('Date', 'Size', 'Type'))
         self.tree.config(height=20)
         # Creating the headings
@@ -94,7 +134,7 @@ class DropboxUI(DropboxClient):
         # Creating the columns
         self.tree.column('#0', stretch='yes')
         self.tree.column('#1', stretch='yes')
-        self.tree.column('#2' , stretch='yes')
+        self.tree.column('#2', stretch='yes')
 
         folders, current_folder = '', ''
         for item in metadata:
@@ -105,13 +145,14 @@ class DropboxUI(DropboxClient):
             size = item.split(',')[3]
             ftype = item.split(',')[1].split('.')[-1]
 
+            # Fixed files in the root directory
             if folder == '/':
                 self.tree.insert('', 'end', text=file,
                                  values=(date, size, ftype + ' file'),
                                  tags='T')
                 continue
 
-            # Checking if the folder change name
+            # Checking if the folder changing name
             if folder != current_folder:
                 folders = self.tree.insert('', 'end', text=folder, tags='T')
                 current_folder = folder
@@ -121,6 +162,16 @@ class DropboxUI(DropboxClient):
                              values=(date, size, ftype + ' file'), tags='T')
         self.tree.tag_configure('T', font=(self.font, 12))
         self.tree.pack(fill='both', expand=True)
+
+    def windowDestroy(self, window):
+            window.destroy()
+
+    def msgBoxInfo(self, title, message):
+        '''Message box'''
+        messagebox.showinfo(title, message)
+
+    def quit(self):
+        self.master.destroy()
 
 
 def main():
