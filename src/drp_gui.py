@@ -14,7 +14,7 @@ class DropboxUI(DropboxClient):
 
     def __init__(self, master):
         self.master = master
-        self.font = "ArialBold"
+        self.font = ('ArialBold', 12)
         self.home_dir = os.getenv('HOME')
         self.initUI()
 
@@ -66,17 +66,17 @@ class DropboxUI(DropboxClient):
 
     def menuBar(self):
         '''Creating the menu bar'''
-        menubar = tk.Menu(self.master, font=(self.font, 12))
+        menubar = tk.Menu(self.master, font=self.font)
         self.master.config(menu=menubar)
 
-        filemenu = tk.Menu(menubar, font=(self.font, 12), tearoff=0)
+        filemenu = tk.Menu(menubar, font=self.font, tearoff=0)
         filemenu.add_command(label='Upload Files', command=self.openFiles)
         filemenu.add_command(label='Load Files', command=self.loadFiles)
         filemenu.add_separator()
         filemenu.add_command(label='Quit', command=self.quit)
         menubar.add_cascade(label='File', menu=filemenu)
 
-        editmenu = tk.Menu(menubar, font=(self.font, 12), tearoff=0)
+        editmenu = tk.Menu(menubar, font=self.font, tearoff=0)
         editmenu.add_command(label='Settings', command='')
         menubar.add_cascade(label='Edit', menu=editmenu)
 
@@ -84,21 +84,21 @@ class DropboxUI(DropboxClient):
         '''Hnadle upload button'''
         btn = tk.Button(self.frame, text='Upload files', width=10,
                         height=2, relief='raised', bd=2,
-                        font=(self.font, 12), command=self.openFiles)
+                        font=self.font, command=self.openFiles)
         btn.place(relx=0.5, rely=0.3, anchor='center')
 
     def btnLoad(self):
         '''Handle load button'''
         btn = tk.Button(self.frame, text='Load files', width=10,
                         height=2, relief='raised', bd=2,
-                        font=(self.font, 12), command=self.loadFiles)
+                        font=self.font, command=self.loadFiles)
         btn.place(relx=0.5, rely=0.45, anchor='center')
 
     def btnQuit(self):
         '''Handle load button'''
         btn = tk.Button(self.frame, text='Quit', width=6,
                         height=2, relief='raised', bd=2,
-                        font=(self.font, 10), fg='red', command=self.quit)
+                        font=self.font, fg='red', command=self.quit)
         btn.place(relx=0.92, rely=0.93, anchor='center')
 
     def openFiles(self):
@@ -110,17 +110,19 @@ class DropboxUI(DropboxClient):
                                                 filetypes=[
                                                     ('all files', ['*.*'])]
                                                 )
-        # Connect to the dropbbox account
         if filenames:
+            # Connect to the dropbbox account
             self.connect()
-        # Upload files to the  dropbox acount
-        self.upload(filenames)
+            # Upload files to the  dropbox acount
+            self.upload(filenames)
+            self.msgBoxInfo('Uploading files', 'Uploading finished!')
 
     def loadFiles(self):
         '''Loading files from dropbox accound'''
         # Connect to the dropbbox account
         self.new_top_window = tk.Toplevel()
         self.new_top_window.iconphoto(False, self.img)
+        # Connect to the dropbox account
         self.connect()
         # Get the files from the dropbox account
         metadata = self.list_files()
@@ -163,7 +165,7 @@ class DropboxUI(DropboxClient):
             # Store data into the table
             self.tree.insert(folders, 'end', text=file,
                              values=(date, size, ftype + ' file'), tags='T')
-        self.tree.tag_configure('T', font=(self.font, 12))
+        self.tree.tag_configure('T', font=self.font)
         self.tree.pack(fill='both', expand=True)
 
     def wDestroy(self, widget):
