@@ -176,9 +176,13 @@ class DropboxUI(DropboxClient):
         self.tree.pack(fill='both', expand=True)
 
     def settings(self):
+        '''Set applications settings'''
         self.window_settings = tk.Toplevel()
         self.window_settings.title('Settings')
         self.window_settings.iconphoto(False, self.img)
+        self.window_settings.config(width=500, height=400)
+        labelAppKey = tk.Label(self.window_settings, text='APP KEY', font=self.font)
+        labelAppKey.place(relx=0.1, rely=0.1)
 
     def configs(self):
         self.config = {'API_KEY': self.app_key}
