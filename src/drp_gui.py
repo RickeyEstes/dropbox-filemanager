@@ -13,6 +13,7 @@ from client import DropboxClient
 class DropboxUI(DropboxClient):
 
     def __init__(self, master):
+        # super().__init__(self)
         self.master = master
         self.font = ('ArialBold', 12)
         self.home_dir = os.getenv('HOME')
@@ -77,8 +78,13 @@ class DropboxUI(DropboxClient):
         menubar.add_cascade(label='File', menu=filemenu)
 
         editmenu = tk.Menu(menubar, font=self.font, tearoff=0)
-        editmenu.add_command(label='Settings', command='')
+        editmenu.add_command(label='Settings', command=self.settings)
         menubar.add_cascade(label='Edit', menu=editmenu)
+
+        helpmenu = tk.Menu(menubar, font=self.font, tearoff=0)
+        helpmenu.add_command(label='License', command='')
+        helpmenu.add_command(label='About', command='')
+        menubar.add_cascade(label='Help', menu=helpmenu)
 
     def btnUpload(self):
         '''Hnadle upload button'''
@@ -112,7 +118,7 @@ class DropboxUI(DropboxClient):
                                                 )
         if filenames:
             # Connect to the dropbbox account
-            self.connect()
+            self.connect_to_account()
             # Upload files to the  dropbox acount
             self.upload(filenames)
             self.msgBoxInfo('Uploading files', 'Uploading finished!')
@@ -120,14 +126,15 @@ class DropboxUI(DropboxClient):
     def loadFiles(self):
         '''Loading files from dropbox accound'''
         # Connect to the dropbbox account
-        self.new_top_window = tk.Toplevel()
-        self.new_top_window.iconphoto(False, self.img)
+        self.window_loadFiles = tk.Toplevel()
+        self.window_loadFiles.title('Load files')
+        self.window_loadFiles.iconphoto(False, self.img)
         # Connect to the dropbox account
-        self.connect()
+        self.connect_to_account()
         # Get the files from the dropbox account
         metadata = self.list_files()
         # Creating a tree view table
-        self.tree = ttk.Treeview(self.new_top_window,
+        self.tree = ttk.Treeview(self.window_loadFiles,
                                  columns=('Date', 'Size', 'Type'))
         self.tree.config(height=20)
         # Creating the headings
@@ -168,13 +175,38 @@ class DropboxUI(DropboxClient):
         self.tree.tag_configure('T', font=self.font)
         self.tree.pack(fill='both', expand=True)
 
+    def settings(self):
+        self.window_settings = tk.Toplevel()
+        self.window_settings.title('Settings')
+        self.window_settings.iconphoto(False, self.img)
+
+    def configs(self):
+        self.config = {'API_KEY': self.app_key}
+
+    def readConfigs(self):
+        pass
+
+    def saveConfigs(self):
+        pass
+
     def wDestroy(self, widget):
         '''Widget distroyer'''
         widget.destroy()
 
     def msgBoxInfo(self, title, message):
-        '''Message box'''
+        '''info message box'''
         messagebox.showinfo(title, message)
+
+    def msgBoxWarning(self, title, message):
+        '''Warning message box'''
+        messagebox.showwarning(title, message)
+
+    def connect_to_account(self):
+        if self.app_key:
+            self.connect(self.app_key)
+        else:
+            self.msgBoxWarning('Warning', 'An API KEY required to connect to your acount')
+            self.window_loadFiles.destroy()
 
     def quit(self):
         '''Destroy master window'''

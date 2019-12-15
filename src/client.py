@@ -5,16 +5,14 @@
 import dropbox
 
 
-APP_KEY = ''
-
-
 class DropboxClient:
 
-    def __init__(self, APP_KEY):
+    def __init__(self):
         # This access token can be used to access your account via the API.
-        self.app_key = APP_KEY
+        # self.app_key = APP_KEY
+        pass
 
-    def connect(self):
+    def connect(self, APP_KEY):
         ''' Connecting to the dropbox account'''
         # pass in the access token for the account you want to link.
         self.dbx = dropbox.Dropbox(APP_KEY)
