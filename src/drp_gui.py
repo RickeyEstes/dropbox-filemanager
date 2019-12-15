@@ -19,7 +19,7 @@ class DropboxUI(DropboxClient):
         self.fw = 680   # Width of frame
         self.fh = 480   # Height of the frame
         self.master.title("A dropbox File Manager")
-        self.img = tk.PhotoImage(file='icon.png')
+        self.img = tk.PhotoImage(file='../icon.png')
 
         # Setting icon of master window
         self.master.iconphoto(False, self.img)
@@ -27,6 +27,8 @@ class DropboxUI(DropboxClient):
         self.frame = tk.Frame(self.master, width=self.fw,
                               height=self.fh, relief='raised', bg='')
         self.frame.place(x=10, y=10)
+        self.style = ttk.Style(self.frame)
+        self.style.configure('Treeview')
 
         # Centralize window
         self.centerWindow()
@@ -60,7 +62,7 @@ class DropboxUI(DropboxClient):
 
     def selectFiles(self):
         filenames = filedialog.askopenfilenames(
-                                                initialdir='/home/dslackw/Downloads/',
+                                                initialdir='/home/dslackw/     Downloads/',
                                                 multiple=True,
                                                 title='Select files',
                                                 filetypes=[
@@ -82,6 +84,7 @@ class DropboxUI(DropboxClient):
         # Creating a tree view table
         self.tree = ttk.Treeview(self.new_window,
                                  columns=('Date', 'Size', 'Type'))
+        self.tree.config(height=20)
         # Creating the headings
         self.tree.heading('#0', text='Name')
         self.tree.heading('#1', text='Date')
@@ -91,27 +94,32 @@ class DropboxUI(DropboxClient):
         # Creating the columns
         self.tree.column('#0', stretch='yes')
         self.tree.column('#1', stretch='yes')
-        self.tree.column('#2', stretch='yes')
+        self.tree.column('#2' , stretch='yes')
 
-        current_folder = ''
+        folders, current_folder = '', ''
         for item in metadata:
-            folder = os.path.dirname(item.split(',')[0])
-
             # Spliting the metadata by category
+            folder = os.path.dirname(item.split(',')[0])
             file = item.split(',')[1]
             date = item.split(',')[2]
             size = item.split(',')[3]
             ftype = item.split(',')[1].split('.')[-1]
 
+            if folder == '/':
+                self.tree.insert('', 'end', text=file,
+                                 values=(date, size, ftype + ' file'),
+                                 tags='T')
+                continue
+
             # Checking if the folder change name
-            if current_folder != folder:
-                folders = self.tree.insert('', 'end', text=folder)
+            if folder != current_folder:
+                folders = self.tree.insert('', 'end', text=folder, tags='T')
                 current_folder = folder
 
             # Store data into the table
             self.tree.insert(folders, 'end', text=file,
-                             values=(date, size, ftype + ' file'))
-
+                             values=(date, size, ftype + ' file'), tags='T')
+        self.tree.tag_configure('T', font=(self.font, 12))
         self.tree.pack(fill='both', expand=True)
 
 
