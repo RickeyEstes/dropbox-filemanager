@@ -14,6 +14,7 @@ class DropboxUI(DropboxClient):
 
     def __init__(self, master):
         # super().__init__(self)
+        self.app_key = ''
         self.master = master
         self.font = ('ArialBold', 12)
         self.home_dir = os.getenv('HOME')
@@ -126,11 +127,10 @@ class DropboxUI(DropboxClient):
     def loadFiles(self):
         '''Loading files from dropbox accound'''
         # Connect to the dropbbox account
+        self.connect_to_account()
         self.window_loadFiles = tk.Toplevel()
         self.window_loadFiles.title('Load files')
         self.window_loadFiles.iconphoto(False, self.img)
-        # Connect to the dropbox account
-        self.connect_to_account()
         # Get the files from the dropbox account
         metadata = self.list_files()
         # Creating a tree view table
@@ -205,8 +205,7 @@ class DropboxUI(DropboxClient):
         if self.app_key:
             self.connect(self.app_key)
         else:
-            self.msgBoxWarning('Warning', 'An API KEY required to connect to your acount')
-            self.window_loadFiles.destroy()
+            self.msgBoxWarning('Warning', 'An APP KEY required to connect to your acount')
 
     def quit(self):
         '''Destroy master window'''
