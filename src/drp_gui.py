@@ -1,7 +1,10 @@
-import os
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
 
-from PIL import Image, ImageTk
+
+import os
 import tkinter as tk
+from PIL import Image, ImageTk
 from tkinter import filedialog, messagebox, ttk
 
 from client import DropboxClient
@@ -30,7 +33,6 @@ class DropboxUI(DropboxClient):
         self.frame.place(x=10, y=10)
         self.style = ttk.Style(self.frame)
         self.style.configure('Treeview')
-
 
         # Centralize window
         self.centerWindow()
@@ -109,7 +111,8 @@ class DropboxUI(DropboxClient):
                                                     ('all files', ['*.*'])]
                                                 )
         # Connect to the dropbbox account
-        self.connect()
+        if filenames:
+            self.connect()
         # Upload files to the  dropbox acount
         self.upload(filenames)
 
@@ -163,14 +166,16 @@ class DropboxUI(DropboxClient):
         self.tree.tag_configure('T', font=(self.font, 12))
         self.tree.pack(fill='both', expand=True)
 
-    def windowDestroy(self, window):
-            window.destroy()
+    def wDestroy(self, widget):
+        '''Widget distroyer'''
+        widget.destroy()
 
     def msgBoxInfo(self, title, message):
         '''Message box'''
         messagebox.showinfo(title, message)
 
     def quit(self):
+        '''Destroy master window'''
         self.master.destroy()
 
 
