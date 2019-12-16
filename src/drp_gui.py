@@ -3,6 +3,7 @@
 
 
 import os
+import json
 import tkinter as tk
 from PIL import Image, ImageTk
 from tkinter import filedialog, messagebox, ttk
@@ -13,10 +14,10 @@ from client import DropboxClient
 class DropboxUI(DropboxClient):
 
     def __init__(self, master):
-        # super().__init__(self)
-        self.app_key = ''
+        # Load configurations
+        self.readConfigs()
         self.master = master
-        self.font = ('ArialBold', 12)
+        self.font = ('Arial', 12, '')
         self.home_dir = os.getenv('HOME')
         self.initUI()
 
@@ -196,8 +197,6 @@ class DropboxUI(DropboxClient):
                               command=self.window_loadFiles.destroy)
         btnCancel.place(relx=0.92, rely=0.92, anchor='center')
 
-
-
     def settings(self):
         '''Set applications settings'''
         self.window_settings = tk.Toplevel()
@@ -205,16 +204,59 @@ class DropboxUI(DropboxClient):
         self.window_settings.title('Settings')
         self.window_settings.iconphoto(False, self.img)
         self.window_settings.config(width=620, height=400)
+
         labelAppKey = tk.Label(self.window_settings, text='APP KEY',
                                font=self.font)
         labelAppKey.place(relx=0.05, rely=0.11)
+
+        # Enter a APP KEY
         entryAppKey = tk.Entry(self.window_settings, bd=2,
                                font=self.font, width=47)
+        entryAppKey.insert(0, self.app_key)
         entryAppKey.place(relx=0.2, rely=0.1)
 
+        # Label for radio button font name
+        labelFonts = tk.Label(self.window_settings, text='Fonts',
+                              font=self.font)
+        labelFonts.place(relx=0.05, rely=0.2)
+
+        # Radio buttons for font name control
+        var1 = tk.IntVar()
+        radioBtn1 = tk.Radiobutton(self.window_settings, text='Arial',
+                                   variable=var1, value=1, indicator=1,
+                                   font=self.font, tristatevalue=0,
+                                   command=self.test)
+        radioBtn1.place(relx=0.2, rely=0.2)
+
+        radioBtn2 = tk.Radiobutton(self.window_settings, text='Arial Bold',
+                                   variable=var1, value=2, indicator=1,
+                                   font=self.font, tristatevalue=0,
+                                   command=self.test)
+        radioBtn2.place(relx=0.3, rely=0.2)
+
+        # Label for radio button font size
+        labelFonts = tk.Label(self.window_settings, text='Size',
+                              font=self.font)
+        labelFonts.place(relx=0.05, rely=0.3)
+
+        # Radio buttons for font size control
+        var2 = tk.IntVar()
+        radioBtn3 = tk.Radiobutton(self.window_settings, text='10',
+                                   variable=var2, value=1, indicator=1,
+                                   font=self.font, tristatevalue=0,
+                                   command=self.test)
+        radioBtn3.place(relx=0.2, rely=0.3)
+
+        radioBtn4 = tk.Radiobutton(self.window_settings, text='12',
+                                   variable=var2, value=2, indicator=1,
+                                   font=self.font, tristatevalue=0,
+                                   command=self.test)
+        radioBtn4.place(relx=0.3, rely=0.3)
+
+        # Buttons for save settings or cancel
         btnSave = tk.Button(self.window_settings, text='Save', width=5,
                             height=1, relief='raised', bd=2,
-                            font=self.font, command='')
+                            font=self.font, command=self.saveConfigs)
         btnSave.place(relx=0.75, rely=0.9, anchor='center')
 
         btnCancel = tk.Button(self.window_settings, text='Cancel', width=5,
@@ -223,19 +265,25 @@ class DropboxUI(DropboxClient):
                               command=self.window_settings.destroy)
         btnCancel.place(relx=0.9, rely=0.9, anchor='center')
 
-
     def configs(self):
-        self.config = {'API_KEY': self.app_key}
+        self.config = {
+            'APP_KEY': self.app_key
+
+            }
 
     def readConfigs(self):
-        pass
+        if os.path.isfile('config.json'):
+            with open('config.json') as config_file:
+                js = json.load(config_file)
+            self.app_key = js['APP_KEY']
+        else:
+            self.app_key = 'Enter a vild app key'
 
     def saveConfigs(self):
-        pass
-
-    def wDestroy(self, widget):
-        '''Widget distroyer'''
-        widget.destroy()
+        self.configs()
+        js = json.dumps(self.config)
+        with open('config.json', 'w') as f:
+            f.write(js)
 
     def msgBoxInfo(self, title, message):
         '''info message box'''
@@ -246,14 +294,18 @@ class DropboxUI(DropboxClient):
         messagebox.showwarning(title, message)
 
     def connect_to_account(self):
+        '''Checking if connected to the account by APP KEY'''
         if self.app_key:
             self.connect(self.app_key)
         else:
             self.msgBoxWarning('Warning', 'An APP KEY required to connect to your acount')
 
     def quit(self):
-        '''Destroy master window'''
+        '''Destroy master window and quit'''
         self.master.destroy()
+
+    def test(self):
+        pass
 
 
 def main():
