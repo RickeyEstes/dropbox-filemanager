@@ -104,8 +104,9 @@ class DropboxUI(DropboxClient):
     def btnQuit(self):
         '''Handle load button'''
         btn = tk.Button(self.frame, text='Quit', width=6,
-                        height=2, relief='raised', bd=2,
-                        font=self.font, fg='red', command=self.quit)
+                        height=1, relief='raised', bd=2,
+                        font=self.font, fg='white', bg='grey',
+                        command=self.quit)
         btn.place(relx=0.92, rely=0.93, anchor='center')
 
     def openFiles(self):
@@ -131,12 +132,14 @@ class DropboxUI(DropboxClient):
         self.window_loadFiles = tk.Toplevel()
         self.window_loadFiles.title('Load files')
         self.window_loadFiles.iconphoto(False, self.img)
+
         # Get the files from the dropbox account
         metadata = self.list_files()
         # Creating a tree view table
         self.tree = ttk.Treeview(self.window_loadFiles,
                                  columns=('Date', 'Size', 'Type'))
-        self.tree.config(height=20)
+        self.tree.configure(height=20)
+
         # Creating the headings
         self.tree.heading('#0', text='Name')
         self.tree.heading('#1', text='Date')
@@ -175,14 +178,51 @@ class DropboxUI(DropboxClient):
         self.tree.tag_configure('T', font=self.font)
         self.tree.pack(fill='both', expand=True)
 
+        btnRemove = tk.Button(self.window_loadFiles, text='Delete',
+                              height=1, relief='raised', bd=1,
+                              font=self.font, fg='red',
+                              command='')
+        btnRemove.place(relx=0.65, rely=0.92, anchor='center')
+
+        btnDownload = tk.Button(self.window_loadFiles, text='Download',
+                                height=1, relief='raised', bd=1,
+                                font=self.font,
+                                command='')
+        btnDownload.place(relx=0.79, rely=0.92, anchor='center')
+
+        btnCancel = tk.Button(self.window_loadFiles, text='Cancel',
+                              height=1, relief='raised', bd=1,
+                              font=self.font,
+                              command=self.window_loadFiles.destroy)
+        btnCancel.place(relx=0.92, rely=0.92, anchor='center')
+
+
+
     def settings(self):
         '''Set applications settings'''
         self.window_settings = tk.Toplevel()
+        self.window_settings.resizable(0, 0)
         self.window_settings.title('Settings')
         self.window_settings.iconphoto(False, self.img)
-        self.window_settings.config(width=500, height=400)
-        labelAppKey = tk.Label(self.window_settings, text='APP KEY', font=self.font)
-        labelAppKey.place(relx=0.1, rely=0.1)
+        self.window_settings.config(width=620, height=400)
+        labelAppKey = tk.Label(self.window_settings, text='APP KEY',
+                               font=self.font)
+        labelAppKey.place(relx=0.05, rely=0.11)
+        entryAppKey = tk.Entry(self.window_settings, bd=2,
+                               font=self.font, width=47)
+        entryAppKey.place(relx=0.2, rely=0.1)
+
+        btnSave = tk.Button(self.window_settings, text='Save', width=5,
+                            height=1, relief='raised', bd=2,
+                            font=self.font, command='')
+        btnSave.place(relx=0.75, rely=0.9, anchor='center')
+
+        btnCancel = tk.Button(self.window_settings, text='Cancel', width=5,
+                              height=1, relief='raised', bd=2,
+                              font=self.font,
+                              command=self.window_settings.destroy)
+        btnCancel.place(relx=0.9, rely=0.9, anchor='center')
+
 
     def configs(self):
         self.config = {'API_KEY': self.app_key}
