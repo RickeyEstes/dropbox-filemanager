@@ -17,8 +17,8 @@ class DropboxUI(DropboxClient):
         # Load configurations
         self.readConfigs()
         self.master = master
-        self.font = ('Arial', 12, '')
-        self.home_dir = os.getenv('HOME')
+        self.font = ('arial', 12, '')
+        self.user_path = os.getenv('HOME')
         self.initUI()
 
     def initUI(self):
@@ -113,7 +113,7 @@ class DropboxUI(DropboxClient):
     def openFiles(self):
         '''Choosing files for uploading'''
         filenames = filedialog.askopenfilenames(
-                                                initialdir=f'{self.home_dir}',
+                                                initialdir=f'{self.user_path}',
                                                 multiple=True,
                                                 title='Select files',
                                                 filetypes=[
@@ -215,10 +215,20 @@ class DropboxUI(DropboxClient):
         entryAppKey.insert(0, self.app_key)
         entryAppKey.place(relx=0.2, rely=0.1)
 
+        labelPath = tk.Label(self.window_settings, text='User PATH',
+                             font=self.font)
+        labelPath.place(relx=0.05, rely=0.21)
+
+        # Enter the user path
+        entryPath = tk.Entry(self.window_settings, bd=2,
+                               font=self.font, width=30)
+        entryPath.insert(0, self.user_path)
+        entryPath.place(relx=0.2, rely=0.2)
+
         # Label for radio button font name
-        labelFonts = tk.Label(self.window_settings, text='Fonts',
+        labelFonts = tk.Label(self.window_settings, text='Font',
                               font=self.font)
-        labelFonts.place(relx=0.05, rely=0.2)
+        labelFonts.place(relx=0.05, rely=0.4)
 
         # Radio buttons for font name control
         var1 = tk.IntVar()
@@ -226,32 +236,40 @@ class DropboxUI(DropboxClient):
                                    variable=var1, value=1, indicator=1,
                                    font=self.font, tristatevalue=0,
                                    command=self.test)
-        radioBtn1.place(relx=0.2, rely=0.2)
+        radioBtn1.place(relx=0.2, rely=0.4)
 
-        radioBtn2 = tk.Radiobutton(self.window_settings, text='Arial Bold',
+        radioBtn2 = tk.Radiobutton(self.window_settings, text='Tahoma',
                                    variable=var1, value=2, indicator=1,
                                    font=self.font, tristatevalue=0,
                                    command=self.test)
-        radioBtn2.place(relx=0.3, rely=0.2)
+
+        radioBtn2.place(relx=0.32, rely=0.4)
+
+        radioBtn3 = tk.Radiobutton(self.window_settings, text='DejaVu Sans',
+                                   variable=var1, value=3, indicator=1,
+                                   font=self.font, tristatevalue=0,
+                                   command=self.test)
+
+        radioBtn3.place(relx=0.5, rely=0.4)
 
         # Label for radio button font size
         labelFonts = tk.Label(self.window_settings, text='Size',
                               font=self.font)
-        labelFonts.place(relx=0.05, rely=0.3)
+        labelFonts.place(relx=0.05, rely=0.5)
 
         # Radio buttons for font size control
         var2 = tk.IntVar()
-        radioBtn3 = tk.Radiobutton(self.window_settings, text='10',
+        radioBtn4 = tk.Radiobutton(self.window_settings, text='10',
                                    variable=var2, value=1, indicator=1,
                                    font=self.font, tristatevalue=0,
                                    command=self.test)
-        radioBtn3.place(relx=0.2, rely=0.3)
+        radioBtn4.place(relx=0.2, rely=0.5)
 
-        radioBtn4 = tk.Radiobutton(self.window_settings, text='12',
+        radioBtn5 = tk.Radiobutton(self.window_settings, text='12',
                                    variable=var2, value=2, indicator=1,
                                    font=self.font, tristatevalue=0,
                                    command=self.test)
-        radioBtn4.place(relx=0.3, rely=0.3)
+        radioBtn5.place(relx=0.32, rely=0.5)
 
         # Buttons for save settings or cancel
         btnSave = tk.Button(self.window_settings, text='Save', width=5,
@@ -266,21 +284,28 @@ class DropboxUI(DropboxClient):
         btnCancel.place(relx=0.9, rely=0.9, anchor='center')
 
     def configs(self):
+        '''Default applications configs'''
         self.config = {
-            'APP_KEY': self.app_key
-
+            'app_key': self.app_key,
+            'font_size': 12,
+            'font_name': 'Arial'
             }
 
     def readConfigs(self):
+        '''Read the configuration file'''
         if os.path.isfile('config.json'):
             with open('config.json') as config_file:
                 js = json.load(config_file)
-            self.app_key = js['APP_KEY']
+            self.app_key = js['app_key']
+            self.font_size = js['font_size']
+            self.font_name = js['font_name']
         else:
-            self.app_key = 'Enter a vild app key'
+            self.app_key = 'Enter a valid app key'
 
     def saveConfigs(self):
-        self.configs()
+        '''Save the configuration to a json file'''
+        if not os.path.isfile('config.json'):
+            self.configs()
         js = json.dumps(self.config)
         with open('config.json', 'w') as f:
             f.write(js)
