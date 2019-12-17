@@ -50,7 +50,7 @@ class DropboxUI(DropboxClient):
 
     def centerWindow(self):
         '''Centrslizing the master window'''
-        # self.master.winfo_width())  #current window width
+        # self.master.winfo_width())  current window width
         # frame.winfo_height()  current window height
         self.w = 700
         self.h = 500
@@ -234,24 +234,30 @@ class DropboxUI(DropboxClient):
         labelFonts.place(relx=0.05, rely=0.4)
 
         # Radio buttons for font name control
-        var1 = tk.IntVar()
+        default_name = {
+            'Arial': 1,
+            'Tahoma': 2,
+            'DejaVu Sans': 3
+        }
+
+        var1 = tk.IntVar(None, default_name[self.config['font_name']])
         radioBtn1 = tk.Radiobutton(self.window_settings, text='Arial',
                                    variable=var1, value=1, indicator=1,
-                                   font=self.font, tristatevalue=0,
-                                   command=self.test)
+                                   font=self.font,
+                                   command=self.updateConfigs)
         radioBtn1.place(relx=0.2, rely=0.4)
 
         radioBtn2 = tk.Radiobutton(self.window_settings, text='Tahoma',
                                    variable=var1, value=2, indicator=1,
-                                   font=self.font, tristatevalue=0,
-                                   command=self.test)
+                                   font=self.font,
+                                   command=self.updateConfigs)
 
         radioBtn2.place(relx=0.32, rely=0.4)
 
         radioBtn3 = tk.Radiobutton(self.window_settings, text='DejaVu Sans',
                                    variable=var1, value=3, indicator=1,
-                                   font=self.font, tristatevalue=0,
-                                   command=self.test)
+                                   font=self.font,
+                                   command=self.updateConfigs)
 
         radioBtn3.place(relx=0.5, rely=0.4)
 
@@ -261,17 +267,23 @@ class DropboxUI(DropboxClient):
         labelFonts.place(relx=0.05, rely=0.5)
 
         # Radio buttons for font size control
-        var2 = tk.IntVar()
+
+        default_size = {
+            10: 1,
+            12: 2
+        }
+
+        var2 = tk.IntVar(None, default_size[self.config['font_size']])
         radioBtn4 = tk.Radiobutton(self.window_settings, text='10',
                                    variable=var2, value=1, indicator=1,
-                                   font=self.font, tristatevalue=0,
-                                   command=self.test)
+                                   font=self.font,
+                                   command=self.updateConfigs)
         radioBtn4.place(relx=0.2, rely=0.5)
 
         radioBtn5 = tk.Radiobutton(self.window_settings, text='12',
                                    variable=var2, value=2, indicator=1,
-                                   font=self.font, tristatevalue=0,
-                                   command=self.test)
+                                   font=self.font,
+                                   command=self.updateConfigs)
         radioBtn5.place(relx=0.32, rely=0.5)
 
         # Buttons for save settings or cancel
@@ -285,6 +297,35 @@ class DropboxUI(DropboxClient):
                               font=self.font,
                               command=self.window_settings.destroy)
         btnCancel.place(relx=0.9, rely=0.9, anchor='center')
+
+        self.var1 = var1
+        self.var2 = var2
+        self.entryAppKey = entryAppKey
+        self.entryPath = entryPath
+
+    def updateConfigs(self):
+        '''Get values from settings and update config dictionary'''
+        font_name_dict = {
+            0: '',
+            1: 'Arial',
+            2: 'Tahoma',
+            3: 'DejaVu Sans'}
+
+        font_size_dict = {
+            0: '',
+            1: 10,
+            2: 12
+        }
+
+        fname = font_name_dict[self.var1.get()]
+        fsize = font_size_dict[self.var2.get()]
+
+        self.config = {
+            'app_key': self.entryAppKey.get(),
+            'user_path': self.entryPath.get(),
+            'font_size': fsize,
+            'font_name': fname
+            }
 
     def configs(self):
         '''Default app setting'''
@@ -340,7 +381,6 @@ class DropboxUI(DropboxClient):
 
     def test(self):
         pass
-
 
 def main():
 
