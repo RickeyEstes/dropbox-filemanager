@@ -20,8 +20,16 @@ class DropboxUI(DropboxClient):
         self.readConfigs()
         # This will ensure it works on all platforms
         self.user_home_path = str(Path.home())
+        self.set_folder = '.dropbox-filemanager'
         self.master = master
+        self.initPath()
         self.initUI()
+
+    def initPath(self):
+        '''Creating the configuration folder'''
+        self.conf_folder = f'{self.user_home_path}/{self.set_folder}'
+        if not os.path.isdir(self.conf_folder):
+            os.mkdir(self._conf_folder)
 
     def initUI(self):
         '''Create the UI, labels, window, buttons, frames'''
