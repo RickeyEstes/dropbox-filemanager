@@ -11,6 +11,7 @@ from PIL import Image, ImageTk
 from tkinter import filedialog, messagebox, ttk
 
 from dropbox_filemanager.client import DropboxClient
+from dropbox_filemanager.version import __version__
 
 
 class DropboxUI(DropboxClient):
@@ -98,7 +99,7 @@ class DropboxUI(DropboxClient):
 
         helpmenu = tk.Menu(menubar, font=self.font, tearoff=0)
         helpmenu.add_command(label='License', command='')
-        helpmenu.add_command(label='About', command='')
+        helpmenu.add_command(label='About', command=self.about)
         menubar.add_cascade(label='Help', menu=helpmenu)
 
     def btnUpload(self):
@@ -398,6 +399,38 @@ class DropboxUI(DropboxClient):
         else:
             self.msgBoxWarning('Warning', 'An APP KEY required to '
                                'connect to your acount')
+
+    def about(self):
+        '''About window'''
+        self.window_about = tk.Toplevel()
+        self.window_about.resizable(0, 0)
+        self.window_about.title('About')
+        self.window_about.iconphoto(False, self.img)
+        self.window_about.config(width=400, height=300)
+
+        labelName = tk.Label(self.window_about, text='Dropbox Filemanager',
+                             fg='blue', font=('Arial', '20', 'bold'))
+        labelName.place(relx=0.17, rely=0.1)
+
+        labelVer = tk.Label(self.window_about, text=f'Version {__version__}',
+                            fg='red', font=('Arial', '16', 'bold'))
+        labelVer.place(relx=0.35, rely=0.2)
+
+        labelBased = tk.Label(self.window_about,
+                              text='Python 3 and Tkinter based',
+                              font=('Arial', '14', 'bold'))
+        labelBased.place(relx=0.2, rely=0.4)
+
+        labelCopy = tk.Label(self.window_about,
+                             text='Copyright 2019 © Dimitris Zlatanidis',
+                             font=('Arial', '12', 'italic'))
+        labelCopy.place(relx=0.195, rely=0.6)
+
+        btnClose = tk.Button(self.window_about, text='Close', width=5,
+                             height=1, relief='raised', bd=2,
+                             font=self.font,
+                             command=self.window_about.destroy)
+        btnClose.place(relx=0.5, rely=0.9, anchor='center')
 
     def quit(self):
         '''Destroy master window and quit'''
