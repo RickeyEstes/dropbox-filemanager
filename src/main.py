@@ -4,6 +4,8 @@
 
 import os
 import json
+from pathlib import Path
+
 import tkinter as tk
 from PIL import Image, ImageTk
 from tkinter import filedialog, messagebox, ttk
@@ -16,10 +18,9 @@ class DropboxUI(DropboxClient):
     def __init__(self, master):
         # Load configurations
         self.readConfigs()
+        # This will ensure it works on all platforms
+        self.user_home_path = str(Path.home())
         self.master = master
-        # self.font = ('',)
-        # self.user_path = ''
-        # self.js = {}
         self.initUI()
 
     def initUI(self):
