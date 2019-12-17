@@ -17,10 +17,12 @@ class DropboxUI(DropboxClient):
 
     def __init__(self, master):
         # Load configurations
+        app_name = 'dropbox-filemanager'
         self.readConfigs()
         # This will ensure it works on all platforms
         self.user_home_path = str(Path.home())
-        self.set_folder = '.dropbox-filemanager'
+        self.set_folder = f'.{app_name}'
+        self.path_lib = f'/var/lib/{app_name}'
         self.master = master
         self.initPath()
         self.initUI()
@@ -36,7 +38,7 @@ class DropboxUI(DropboxClient):
         self.fw = 680   # Width of frame
         self.fh = 480   # Height of the frame
         self.master.title("A dropbox File Manager")
-        self.img = tk.PhotoImage(file='../icon.png')
+        self.img = tk.PhotoImage(file=f'{self.path_lib}/icon.png')
 
         # Setting icon of master window
         self.master.iconphoto(False, self.img)
@@ -71,7 +73,7 @@ class DropboxUI(DropboxClient):
 
     def dropboxLogo(self):
         '''Create a welcome postgreSQL logo'''
-        logo = Image.open("../logo.png")
+        logo = Image.open(f'{self.path_lib}/logo.png')
         welcome = ImageTk.PhotoImage(logo)
         welcomeLabel = tk.Label(self.frame, image=welcome)
         welcomeLabel.image = welcome
