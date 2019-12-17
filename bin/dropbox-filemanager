@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 
-from src import main
+from dropbox_filemanager import main
 
 if __name__ == "__main__":
     main()
