@@ -287,21 +287,21 @@ class DropboxUI(DropboxClient):
         radioBtn5.place(relx=0.32, rely=0.5)
 
         # Buttons for save settings or cancel
-        btnSave = tk.Button(self.window_settings, text='Save', width=5,
+        btnApply = tk.Button(self.window_settings, text='Apply', width=5,
                             height=1, relief='raised', bd=2,
-                            font=self.font, command=self.saveConfigs)
-        btnSave.place(relx=0.75, rely=0.9, anchor='center')
+                            font=self.font, command=self.updateConfigs)
+        btnApply.place(relx=0.75, rely=0.9, anchor='center')
 
-        btnCancel = tk.Button(self.window_settings, text='Cancel', width=5,
+        btnClose = tk.Button(self.window_settings, text='Close', width=5,
                               height=1, relief='raised', bd=2,
                               font=self.font,
                               command=self.window_settings.destroy)
-        btnCancel.place(relx=0.9, rely=0.9, anchor='center')
+        btnClose.place(relx=0.9, rely=0.9, anchor='center')
 
-        self.var1 = var1
-        self.var2 = var2
         self.entryAppKey = entryAppKey
         self.entryPath = entryPath
+        self.var1 = var1
+        self.var2 = var2
 
     def updateConfigs(self):
         '''Get values from settings and update config dictionary'''
@@ -319,13 +319,16 @@ class DropboxUI(DropboxClient):
 
         fname = font_name_dict[self.var1.get()]
         fsize = font_size_dict[self.var2.get()]
+        self.app_key = self.entryAppKey.get()
+        self.user_path = self.entryPath.get()
 
         self.config = {
-            'app_key': self.entryAppKey.get(),
-            'user_path': self.entryPath.get(),
+            'app_key': self.app_key,
+            'user_path': self.user_path,
             'font_size': fsize,
             'font_name': fname
             }
+        self.saveConfigs()
 
     def configs(self):
         '''Default app setting'''
