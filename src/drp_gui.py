@@ -17,8 +17,9 @@ class DropboxUI(DropboxClient):
         # Load configurations
         self.readConfigs()
         self.master = master
-        self.font = ('arial', 12, '')
-        self.user_path = os.getenv('HOME')
+        # self.font = ('',)
+        # self.user_path = ''
+        # self.js = {}
         self.initUI()
 
     def initUI(self):
@@ -212,7 +213,8 @@ class DropboxUI(DropboxClient):
         # Enter a APP KEY
         entryAppKey = tk.Entry(self.window_settings, bd=2,
                                font=self.font, width=47)
-        entryAppKey.insert(0, self.app_key)
+        if self.app_key:
+            entryAppKey.insert(0, self.app_key)
         entryAppKey.place(relx=0.2, rely=0.1)
 
         labelPath = tk.Label(self.window_settings, text='User PATH',
@@ -221,8 +223,9 @@ class DropboxUI(DropboxClient):
 
         # Enter the user path
         entryPath = tk.Entry(self.window_settings, bd=2,
-                               font=self.font, width=30)
-        entryPath.insert(0, self.user_path)
+                             font=self.font, width=30)
+        if self.user_path:
+            entryPath.insert(0, self.user_path)
         entryPath.place(relx=0.2, rely=0.2)
 
         # Label for radio button font name
@@ -284,23 +287,29 @@ class DropboxUI(DropboxClient):
         btnCancel.place(relx=0.9, rely=0.9, anchor='center')
 
     def configs(self):
-        '''Default applications configs'''
+        '''Default app setting'''
         self.config = {
-            'app_key': self.app_key,
+            'app_key': '',
+            'user_path': '/home',
             'font_size': 12,
             'font_name': 'Arial'
             }
+        self.publicConfigs()
+
+    def publicConfigs(self):
+        '''Public the configurations'''
+        self.app_key = self.config['app_key']
+        self.user_path = self.config['user_path']
+        self.font = (self.config['font_name'], self.config['font_size'])
 
     def readConfigs(self):
         '''Read the configuration file'''
         if os.path.isfile('config.json'):
             with open('config.json') as config_file:
-                js = json.load(config_file)
-            self.app_key = js['app_key']
-            self.font_size = js['font_size']
-            self.font_name = js['font_name']
+                self.config = json.load(config_file)
+            self.publicConfigs()
         else:
-            self.app_key = 'Enter a valid app key'
+            self.saveConfigs()
 
     def saveConfigs(self):
         '''Save the configuration to a json file'''
