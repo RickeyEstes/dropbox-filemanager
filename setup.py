@@ -10,7 +10,7 @@ except ImportError:
 
 setup(
     name='dropbox-filemanager',
-    packages=['src'],
+    packages=['dropbox-filemanager'],
     scripts=['bin/dropbox-filemanager'],
     version='0.0.1',
     description="An application to manage files in dropbox account",
