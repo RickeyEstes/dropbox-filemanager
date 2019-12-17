@@ -16,15 +16,15 @@ from dropbox_filemanager.client import DropboxClient
 class DropboxUI(DropboxClient):
 
     def __init__(self, master):
-        # Load configurations
         app_name = 'dropbox-filemanager'
-        self.readConfigs()
         # This will ensure it works on all platforms
         self.user_home_path = str(Path.home())
         self.set_folder = f'.{app_name}'
-        self.config_file = f'{self.user_home_path}/{self.folder}/config.json'
+        self.config_file = f'{self.user_home_path}/{self.set_folder}/config.json'
         self.path_lib = f'/var/lib/{app_name}'
         self.master = master
+        # Load configurations
+        self.readConfigs()
         self.initPath()
         self.initUI()
 
