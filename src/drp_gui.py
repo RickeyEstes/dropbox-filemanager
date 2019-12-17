@@ -234,6 +234,8 @@ class DropboxUI(DropboxClient):
         labelFonts.place(relx=0.05, rely=0.4)
 
         # Radio buttons for font name control
+
+        # Set the defaults values
         default_name = {
             'Arial': 1,
             'Tahoma': 2,
@@ -268,6 +270,7 @@ class DropboxUI(DropboxClient):
 
         # Radio buttons for font size control
 
+        # Set the default values
         default_size = {
             10: 1,
             12: 2
@@ -288,14 +291,14 @@ class DropboxUI(DropboxClient):
 
         # Buttons for save settings or cancel
         btnApply = tk.Button(self.window_settings, text='Apply', width=5,
-                            height=1, relief='raised', bd=2,
-                            font=self.font, command=self.updateConfigs)
+                             height=1, relief='raised', bd=2,
+                             font=self.font, command=self.updateConfigs)
         btnApply.place(relx=0.75, rely=0.9, anchor='center')
 
         btnClose = tk.Button(self.window_settings, text='Close', width=5,
-                              height=1, relief='raised', bd=2,
-                              font=self.font,
-                              command=self.window_settings.destroy)
+                             height=1, relief='raised', bd=2,
+                             font=self.font,
+                             command=self.window_settings.destroy)
         btnClose.place(relx=0.9, rely=0.9, anchor='center')
 
         self.entryAppKey = entryAppKey
@@ -317,17 +320,21 @@ class DropboxUI(DropboxClient):
             2: 12
         }
 
+        # Apply user values
         fname = font_name_dict[self.var1.get()]
         fsize = font_size_dict[self.var2.get()]
         self.app_key = self.entryAppKey.get()
         self.user_path = self.entryPath.get()
 
+        # Update the config dictionary
         self.config = {
             'app_key': self.app_key,
             'user_path': self.user_path,
             'font_size': fsize,
             'font_name': fname
             }
+
+        # Save the json configs
         self.saveConfigs()
 
     def configs(self):
@@ -338,6 +345,7 @@ class DropboxUI(DropboxClient):
             'font_size': 12,
             'font_name': 'Arial'
             }
+        # Publix the configuration
         self.publicConfigs()
 
     def publicConfigs(self):
@@ -347,16 +355,16 @@ class DropboxUI(DropboxClient):
         self.font = (self.config['font_name'], self.config['font_size'])
 
     def readConfigs(self):
-        '''Read the configuration file'''
+        '''Read the configuration from a json file format'''
         if os.path.isfile('config.json'):
             with open('config.json') as config_file:
                 self.config = json.load(config_file)
-            self.publicConfigs()
+            self.publicConfigs()    # Public the configurations
         else:
-            self.saveConfigs()
+            self.saveConfigs()     # Save the configurations
 
     def saveConfigs(self):
-        '''Save the configuration to a json file'''
+        '''Save the configuration in a json file format'''
         if not os.path.isfile('config.json'):
             self.configs()
         js = json.dumps(self.config)
@@ -376,7 +384,8 @@ class DropboxUI(DropboxClient):
         if self.app_key:
             self.connect(self.app_key)
         else:
-            self.msgBoxWarning('Warning', 'An APP KEY required to connect to your acount')
+            self.msgBoxWarning('Warning', 'An APP KEY required to '
+                               'connect to your acount')
 
     def quit(self):
         '''Destroy master window and quit'''
@@ -384,6 +393,7 @@ class DropboxUI(DropboxClient):
 
     def test(self):
         pass
+
 
 def main():
 
