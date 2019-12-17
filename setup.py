@@ -10,7 +10,7 @@ except ImportError:
 
 setup(
     name='dropbox-filemanager',
-    packages=['src'],
+    packages=['dropbox-filemanager', 'src'],
     version='0.0.1',
     description="An application to manage files in dropbox account",
     long_description=open('README.md').read(),
@@ -18,6 +18,10 @@ setup(
     author="dslackw",
     author_email="d.zlatanidis@gamil.com",
     url="https://gitlab.com/dslackw/dropbox-filemanager",
+    package_data={'': ['LICENSE.txt', 'README.md']},
+    data_files=['/var/lib/dropbox-filemanager', ['icons/iconn.png',
+                                                 'logo.png']],
+    install_requires='',
     classifiers=[
         "Development Status :: 3 - Alpha",
         "Environment :: X11 Applications",
