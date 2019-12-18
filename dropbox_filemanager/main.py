@@ -113,7 +113,7 @@ class DropboxUI(DropboxClient):
         '''Handle load button'''
         btn = tk.Button(self.frame, text='Load files', width=10,
                         height=2, relief='raised', bd=2,
-                        font=self.font, command=self.loadFiles)
+                        font=self.font, command=self.checkLoad)
         btn.place(relx=0.5, rely=0.45, anchor='center')
 
     def btnQuit(self):
@@ -140,10 +140,16 @@ class DropboxUI(DropboxClient):
             self.upload(filenames)
             self.msgBoxInfo('Uploading files', 'Uploading finished!')
 
+    def checkLoad(self):
+        if self.app_key:
+            self.connect_to_account()
+            self.loadFiles()
+        else:
+            self.msgBoxWarning('Warning', 'An APP KEY required to '
+                               'connect to your acount')
+
     def loadFiles(self):
         '''Loading files from dropbox accound'''
-        # Connect to the dropbbox account
-        self.connect_to_account()
         self.window_loadFiles = tk.Toplevel()
         self.window_loadFiles.title('Load files')
         self.window_loadFiles.iconphoto(False, self.img)
@@ -190,13 +196,17 @@ class DropboxUI(DropboxClient):
             # Store data into the table
             self.tree.insert(folders, 'end', text=file,
                              values=(date, size, ftype + ' file'), tags='T')
+
+        # Grab the item selection of the tree
+        self.tree.bind('<<TreeviewSelect>>', self.tree_selected)
+
         self.tree.tag_configure('T', font=self.font)
         self.tree.pack(fill='both', expand=True)
 
         btnRemove = tk.Button(self.window_loadFiles, text='Delete',
                               height=1, relief='raised', bd=1,
                               font=self.font, fg='red',
-                              command='')
+                              command=self.removeFile)
         btnRemove.place(relx=0.65, rely=0.92, anchor='center')
 
         btnDownload = tk.Button(self.window_loadFiles, text='Download',
@@ -210,6 +220,14 @@ class DropboxUI(DropboxClient):
                               font=self.font,
                               command=self.window_loadFiles.destroy)
         btnCancel.place(relx=0.92, rely=0.92, anchor='center')
+
+    def tree_selected(self, event):
+        '''Tree selected event item'''
+        self.selected = event.widget.selection()
+
+    def removeFile(self):
+        for i in self.selected:
+            self.remove(self.tree.item(i)['text'].strip())
 
     def settings(self):
         '''Set applications settings'''
@@ -399,11 +417,8 @@ class DropboxUI(DropboxClient):
 
     def connect_to_account(self):
         '''Checking if connected to the account by APP KEY'''
-        if self.app_key:
-            self.connect(self.app_key)
-        else:
-            self.msgBoxWarning('Warning', 'An APP KEY required to '
-                               'connect to your acount')
+        self.connect(self.app_key)
+        self.test()
 
     def about(self):
         '''About window'''

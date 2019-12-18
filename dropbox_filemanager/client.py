@@ -15,7 +15,12 @@ class DropboxClient:
     def connect(self, APP_KEY):
         ''' Connecting to the dropbox account'''
         # pass in the access token for the account you want to link.
-        self.dbx = dropbox.Dropbox(APP_KEY)
+        try:
+            self.dbx = dropbox.Dropbox(APP_KEY)
+        except dropbox.exceptions.BadInputError:
+            pass
+
+    def test(self):
         # Test it out to make sure you've linked the right account.
         self.dbx.users_get_current_account()
 
@@ -24,6 +29,9 @@ class DropboxClient:
         for file in files:
             with open(file, 'rb') as f:
                 self.dbx.files_upload(f.read(), '/' + file.split('/')[-1])
+
+    def remove(self, file):
+        self.dbx.files_delete(file)
 
     def list_files(self):
         '''Return list of uploaded files'''
