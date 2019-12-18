@@ -1,7 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-
 import os
 import time
 import json
@@ -213,7 +212,7 @@ class DropboxUI(DropboxClient):
             size = item.split(',')[3].strip()
             ftype = item.split(',')[1].split('.')[-1].strip()
 
-            # Creatinf a dictionary file tree
+            # Creating a dictionary file tree
             self.files_dict[file] = folder
 
             # Fixed files in the root directory
@@ -265,15 +264,16 @@ class DropboxUI(DropboxClient):
         for i in self.selected:
             file_name = self.tree.item(i)['text'].strip()
             folder_name = f'{self.files_dict[file_name]}'
-            if file_name[0] != '/':
-                file_name = f'/{file_name}'
-                folder_name = folder_name[1:]
+
+            # Fixed deleting files
+            if folder_name != '/':
+                folder_name = f'{folder_name}/'
+
         # Create the file path
         file_path = f'{folder_name}{file_name}'
 
         choosed = self.msgBoxYesNo('Delete file',
                                    f'Delete the file:  {file_name[1:]} ?')
-
         if choosed:
             self.remove(file_path)
             # Refresh the window
@@ -522,7 +522,6 @@ def main():
     root.bind("<Escape>", exit)
     DropboxUI(root)
     root.mainloop()
-
 
 if __name__ == '__main__':
     main()
