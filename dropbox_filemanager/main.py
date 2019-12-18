@@ -230,14 +230,16 @@ class DropboxUI(DropboxClient):
         self.selected = event.widget.selection()
 
     def removeFile(self):
+        '''Remove files from the account'''
         for i in self.selected:
             file_name = self.tree.item(i)['text'].strip()
             folder_name = f'{self.files_dict[file_name]}'
             if file_name[0] != '/':
                 file_name = f'/{file_name}'
                 folder_name = folder_name[1:]
-
+        # Create the file path
         file_path = f'{folder_name}{file_name}'
+
         choosed = self.msgBoxYesNo('Delete file',
                                    f'Delete the file:  {file_name[1:]} ?')
 
