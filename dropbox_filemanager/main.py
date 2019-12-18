@@ -305,7 +305,7 @@ class DropboxUI(DropboxClient):
         # Buttons for save settings or cancel
         btnApply = tk.Button(self.window_settings, text='Apply', width=5,
                              height=1, relief='raised', bd=2,
-                             font=self.font, command=self.updateConfigs)
+                             font=self.font, command=self.applyPressed)
         btnApply.place(relx=0.75, rely=0.9, anchor='center')
 
         btnClose = tk.Button(self.window_settings, text='Close', width=5,
@@ -318,6 +318,11 @@ class DropboxUI(DropboxClient):
         self.entryPath = entryPath
         self.var1 = var1
         self.var2 = var2
+
+    def applyPressed(self):
+        '''Apply the settings and destroy the windows'''
+        self.updateConfigs()
+        self.window_settings.destroy()
 
     def updateConfigs(self):
         '''Get values from settings and update config dictionary'''
