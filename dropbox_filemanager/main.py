@@ -3,8 +3,10 @@
 
 
 import os
+import time
 import json
 from pathlib import Path
+from multiprocessing import Process
 
 import tkinter as tk
 from PIL import Image, ImageTk
@@ -133,11 +135,19 @@ class DropboxUI(DropboxClient):
                                                 filetypes=[
                                                     ('all files', ['*.*'])]
                                                 )
+
         if filenames:
             # Connect to the dropbbox account
             self.connect_to_account()
             # Upload files to the  dropbox acount
-            self.upload(filenames)
+            p1 = Process(target=self.upload(filenames))
+            p1.start()  # multiprocessing
+            # Starting the progress bar
+            p2 = Process(target=self.barWindow())
+            p2.start()  # multiprocessing
+
+            p1.join()   # Join p1 job
+            p2.join()   # join p2 job
             self.msgBoxInfo('Uploading files', 'Uploading finished!')
 
     def checkLoad(self):
@@ -147,6 +157,28 @@ class DropboxUI(DropboxClient):
         else:
             self.msgBoxWarning('Warning', 'An APP KEY required to '
                                'connect to your acount')
+
+    def barWindow(self):
+        '''Set a progress bar after uploading'''
+        self.window_bar = tk.Toplevel()
+        self.window_bar.resizable(0, 0)
+        self.window_bar.title('Uploading...')
+        self.window_bar.config(width=300, height=100)
+        self.progress = ttk.Progressbar(self.window_bar, orient='horizontal',
+                                        length=100, mode='determinate')
+
+        self.progress.pack(ipady=5, ipadx=100)
+        self.progressBarRun()
+        self.window_bar.destroy()
+
+    def progressBarRun(self):
+        # Progress bar widget
+        self.progress['maximum'] = 100
+        for i in range(101):
+            time.sleep(0.02)
+            self.progress["value"] = i
+            self.progress.update()
+            self.progress["value"] = 0
 
     def loadFiles(self):
         '''Loading files from dropbox accound'''
