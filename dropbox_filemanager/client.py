@@ -31,13 +31,14 @@ class DropboxClient:
                 self.dbx.files_upload(f.read(), '/' + file.split('/')[-1])
 
     def remove(self, file):
+        '''Remove files from the account'''
         self.dbx.files_delete(file)
 
     def list_files(self):
         '''Return list of uploaded files'''
-        flist = []
+        file_list = []
         metadata = self.dbx.files_list_folder(path='', recursive=True)
         for m in metadata.entries:
             if isinstance(m, dropbox.files.FileMetadata):
-                flist.append(f'{m.path_display}, {m.name}, {m.client_modified}, {m.size}')
-        return flist
+                file_list.append(f'{m.path_display}, {m.name}, {m.client_modified}, {m.size}')
+        return file_list
