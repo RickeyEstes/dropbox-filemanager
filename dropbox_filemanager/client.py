@@ -31,9 +31,7 @@ class DropboxClient:
                 self.dbx.files_upload(f.read(), '/' + file.split('/')[-1])
 
     def remove(self, file):
-        pass
-        # print(file)
-        # self.dbx.files_delete('/jim/books2.txt')
+        self.dbx.files_delete(file)
 
     def list_files(self):
         '''Return list of uploaded files'''
