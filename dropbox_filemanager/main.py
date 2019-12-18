@@ -35,7 +35,7 @@ class DropboxUI(DropboxClient):
         '''Creating the configuration folder'''
         self.conf_folder = f'{self.user_home_path}/{self.set_folder}'
         if not os.path.isdir(self.conf_folder):
-            os.mkdir(self._conf_folder)
+            os.mkdir(self.conf_folder)
 
     def initUI(self):
         '''Create the UI, labels, window, buttons, frames'''
@@ -135,7 +135,6 @@ class DropboxUI(DropboxClient):
                                                 filetypes=[
                                                     ('all files', ['*.*'])]
                                                 )
-
         if filenames:
             # Connect to the dropbbox account
             self.connect_to_account()
@@ -521,7 +520,7 @@ def main():
     root = tk.Tk()
     root.resizable(0, 0)
     root.bind("<Escape>", exit)
-    app = DropboxUI(root)
+    DropboxUI(root)
     root.mainloop()
 
 
