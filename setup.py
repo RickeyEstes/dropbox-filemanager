@@ -8,6 +8,8 @@ except ImportError:
     from distutils.core import setup
 
 
+install_requires = ['dropbox>=9.4.0']
+
 setup(
     name='dropbox-filemanager',
     packages=['dropbox_filemanager'],
@@ -22,7 +24,7 @@ setup(
     package_data={'': ['LICENSE.txt', 'README.md']},
     data_files=[('/var/lib/dropbox-filemanager', ['icons/icon.png',
                                                   'icons/logo.png'])],
-    install_requires='',
+    install_requires=install_requires,
     classifiers=[
         "Development Status :: 3 - Alpha",
         "Environment :: X11 Applications",
@@ -32,5 +34,6 @@ setup(
         "Programming Language :: Python",
         "Programming Language :: Python :: 3",
         "Programming Language :: Python :: 3.7"
-        ]
+        ],
+        python_requires='>=3.7'
 )
