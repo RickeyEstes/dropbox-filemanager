@@ -173,13 +173,17 @@ class DropboxUI(DropboxClient):
         self.tree.column('#2', stretch='yes')
 
         folders, current_folder = '', ''
+        self.files_dict = {}
         for item in metadata:
             # Spliting the metadata by category
             folder = os.path.dirname(item.split(',')[0])
-            file = item.split(',')[1]
-            date = item.split(',')[2]
-            size = item.split(',')[3]
-            ftype = item.split(',')[1].split('.')[-1]
+            file = item.split(',')[1].strip()
+            date = item.split(',')[2].strip()
+            size = item.split(',')[3].strip()
+            ftype = item.split(',')[1].split('.')[-1].strip()
+
+            # Creatinf a dictionary file tree
+            self.files_dict[file] = folder
 
             # Fixed files in the root directory
             if folder == '/':
@@ -227,7 +231,21 @@ class DropboxUI(DropboxClient):
 
     def removeFile(self):
         for i in self.selected:
-            self.remove(self.tree.item(i)['text'].strip())
+            file_name = self.tree.item(i)['text'].strip()
+            folder_name = f'{self.files_dict[file_name]}'
+            if file_name[0] != '/':
+                file_name = f'/{file_name}'
+                folder_name = folder_name[1:]
+
+        file_path = f'{folder_name}{file_name}'
+        choosed = self.msgBoxYesNo('Delete file',
+                                   f'Delete the file:  {file_name[1:]} ?')
+
+        if choosed:
+            self.remove(file_path)
+            # Refresh the window
+            self.window_loadFiles.destroy()
+            self.loadFiles()
 
     def settings(self):
         '''Set applications settings'''
@@ -414,6 +432,10 @@ class DropboxUI(DropboxClient):
     def msgBoxWarning(self, title, message):
         '''Warning message box'''
         messagebox.showwarning(title, message)
+
+    def msgBoxYesNo(self, title, message):
+        choose = messagebox.askyesno(title, message)
+        return choose
 
     def connect_to_account(self):
         '''Checking if connected to the account by APP KEY'''
