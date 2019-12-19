@@ -141,7 +141,7 @@ class DropboxUI(DropboxClient):
             p1 = Process(target=self.upload(self.upload_path, filenames))
             p1.start()  # multiprocessing
             # Starting the progress bar
-            p2 = Process(target=self.barWindow())
+            p2 = Process(target=self.barWindow('Uploading...'))
             p2.start()  # multiprocessing
 
             p1.join()   # Join p1 job
@@ -156,11 +156,11 @@ class DropboxUI(DropboxClient):
             self.msgBoxWarning('Warning', 'An APP KEY required to '
                                'connect to your acount')
 
-    def barWindow(self):
+    def barWindow(self, message):
         '''Set a progress bar after uploading'''
         self.window_bar = tk.Toplevel()
         self.window_bar.resizable(0, 0)
-        self.window_bar.title('Uploading...')
+        self.window_bar.title(message)
         self.window_bar.config(width=300, height=100)
         self.progress = ttk.Progressbar(self.window_bar, orient='horizontal',
                                         length=100, mode='determinate')
@@ -265,7 +265,15 @@ class DropboxUI(DropboxClient):
             if folder_name != '/':
                 folder_name = f'{folder_name}/'
 
-            self.download(f'{self.user_path}/{file_name}', f'{folder_name}{file_name}')
+            # Downloading the file
+            p1 = Process(self.download(f'{self.user_path}/{file_name}',
+                                       f'{folder_name}{file_name}'))
+            p1.start()  # multiprocessing
+            # Starting the progress bar
+            p2 = Process(self.barWindow('Downloading...'))
+            p2.start()  # multiprocessing
+            p1.join()   # join p1 job
+            p2.join()   # join p2 job
 
     def tree_selected(self, event):
         '''Tree selected event item'''
