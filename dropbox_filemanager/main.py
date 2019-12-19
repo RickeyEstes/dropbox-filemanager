@@ -341,8 +341,6 @@ class DropboxUI(DropboxClient):
             entryUploadPath.insert(0, self.upload_path)
         entryUploadPath.place(relx=0.23, rely=0.3)
 
-
-
         # Label for radio button font name
         labelFonts = tk.Label(self.window_settings, text='Font',
                               font=self.font)
