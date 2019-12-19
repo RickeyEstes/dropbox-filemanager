@@ -138,7 +138,7 @@ class DropboxUI(DropboxClient):
             # Connect to the dropbbox account
             self.connect_to_account()
             # Upload files to the  dropbox acount
-            p1 = Process(target=self.upload(filenames))
+            p1 = Process(target=self.upload(self.upload_path, filenames))
             p1.start()  # multiprocessing
             # Starting the progress bar
             p2 = Process(target=self.barWindow())
@@ -297,9 +297,9 @@ class DropboxUI(DropboxClient):
                                font=self.font, width=47)
         if self.app_key:
             entryAppKey.insert(0, self.app_key)
-        entryAppKey.place(relx=0.2, rely=0.1)
+        entryAppKey.place(relx=0.23, rely=0.1)
 
-        labelPath = tk.Label(self.window_settings, text='User PATH',
+        labelPath = tk.Label(self.window_settings, text='Local PATH',
                              font=self.font)
         labelPath.place(relx=0.05, rely=0.21)
 
@@ -308,7 +308,20 @@ class DropboxUI(DropboxClient):
                              font=self.font, width=30)
         if self.user_path:
             entryPath.insert(0, self.user_path)
-        entryPath.place(relx=0.2, rely=0.2)
+        entryPath.place(relx=0.23, rely=0.2)
+
+        labelUploadPath = tk.Label(self.window_settings, text='Upload PATH',
+                             font=self.font)
+        labelUploadPath.place(relx=0.05, rely=0.31)
+
+        # Enter the user path
+        entryUploadPath = tk.Entry(self.window_settings, bd=2,
+                             font=self.font, width=30)
+        if self.upload_path:
+            entryUploadPath.insert(0, self.upload_path)
+        entryUploadPath.place(relx=0.23, rely=0.3)
+
+
 
         # Label for radio button font name
         labelFonts = tk.Label(self.window_settings, text='Font',
@@ -383,8 +396,10 @@ class DropboxUI(DropboxClient):
                              command=self.window_settings.destroy)
         btnClose.place(relx=0.9, rely=0.9, anchor='center')
 
+        # Public the entries
         self.entryAppKey = entryAppKey
         self.entryPath = entryPath
+        self.entryUploadPath = entryUploadPath
         self.var1 = var1
         self.var2 = var2
 
@@ -412,11 +427,13 @@ class DropboxUI(DropboxClient):
         fsize = font_size_dict[self.var2.get()]
         self.app_key = self.entryAppKey.get()
         self.user_path = self.entryPath.get()
+        self.upload_path = self.entryUploadPath.get()
 
         # Update the config dictionary
         self.config = {
             'app_key': self.app_key,
             'user_path': self.user_path,
+            'upload_path': self.upload_path,
             'font_size': fsize,
             'font_name': fname
             }
@@ -429,6 +446,7 @@ class DropboxUI(DropboxClient):
         self.config = {
             'app_key': '',
             'user_path': '/home',
+            'upload_path': '/',
             'font_size': 12,
             'font_name': 'Arial'
             }
@@ -439,6 +457,7 @@ class DropboxUI(DropboxClient):
         '''Public the configurations'''
         self.app_key = self.config['app_key']
         self.user_path = self.config['user_path']
+        self.upload_path = self.config['upload_path']
         self.font = (self.config['font_name'], self.config['font_size'])
 
     def readConfigs(self):

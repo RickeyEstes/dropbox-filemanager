@@ -24,12 +24,12 @@ class DropboxClient:
         # Test it out to make sure you've linked the right account.
         self.dbx.users_get_current_account()
 
-    def upload(self, files):
+    def upload(self, path, files):
         '''Uploading files to your dropbox account'''
         for file in files:
             with open(file, 'rb') as f:
                 # self.dbx.files_create_folder('/pop2', autorename=False)
-                self.dbx.files_upload(f.read(), '/' + file.split('/')[-1])
+                self.dbx.files_upload(f.read(), f'{path}{file.split("/")[-1]}')
 
     def remove(self, file):
         '''Remove files from the account'''
