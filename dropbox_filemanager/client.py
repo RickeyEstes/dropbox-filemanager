@@ -15,14 +15,21 @@ class DropboxClient:
     def connect(self, APP_KEY):
         ''' Connecting to the dropbox account'''
         # pass in the access token for the account you want to link.
+        self.dbx = dropbox.Dropbox(APP_KEY)
         try:
-            self.dbx = dropbox.Dropbox(APP_KEY)
+            self.dbx.users_get_current_account()
         except dropbox.exceptions.BadInputError:
-            pass
-
-    def test(self):
-        # Test it out to make sure you've linked the right account.
-        self.dbx.users_get_current_account()
+            # Caught BadInputError
+            return 'Error: Dropbox API: BadInputError'
+        except dropbox.exceptions.HttpError:
+            # Caught HttpError
+            return 'Error: Dropbox API: HttpError'
+        except dropbox.exceptions.DropboxException:
+            # Caught DropboxException
+            return 'Error: Dropbox API: DropboxException'
+        except Exception:
+            # Caught Exception
+            return 'Error: Dropbox API: Exception'
 
     def upload(self, path, files):
         '''Uploading files to your dropbox account'''

@@ -427,6 +427,8 @@ class DropboxUI(DropboxClient):
         '''Apply the settings and destroy the windows'''
         self.updateConfigs()
         self.window_settings.destroy()
+        # Test if the app key connected when the settings applied
+        self.connect_to_account()
 
     def updateConfigs(self):
         '''Get values from settings and update config dictionary'''
@@ -509,10 +511,17 @@ class DropboxUI(DropboxClient):
         choose = messagebox.askyesno(title, message)
         return choose
 
+    def msgBoxError(self, title, message):
+        '''Show error message'''
+        messagebox.showerror(title, message)
+
     def connect_to_account(self):
         '''Checking if connected to the account by APP KEY'''
-        self.connect(self.app_key)
-        self.test()
+        error = self.connect(self.app_key)
+        if error == None:
+            pass
+        else:
+            self.msgBoxError('Error:', error)
 
     def about(self):
         '''About window'''
