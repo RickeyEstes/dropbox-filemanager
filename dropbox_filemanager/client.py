@@ -31,6 +31,10 @@ class DropboxClient:
                 # self.dbx.files_create_folder('/pop2', autorename=False)
                 self.dbx.files_upload(f.read(), f'{path}{file.split("/")[-1]}')
 
+    def download(self, path, file):
+        '''Download a file from dropbox account'''
+        self.dbx.files_download_to_file(path, file)
+
     def remove(self, file):
         '''Remove files from the account'''
         self.dbx.files_delete(file)

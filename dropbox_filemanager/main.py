@@ -246,7 +246,7 @@ class DropboxUI(DropboxClient):
         btnDownload = tk.Button(self.window_loadFiles, text='Download',
                                 height=1, relief='raised', bd=1,
                                 font=self.font,
-                                command='')
+                                command=self.downloadFile)
         btnDownload.place(relx=0.79, rely=0.92, anchor='center')
 
         btnCancel = tk.Button(self.window_loadFiles, text='Cancel',
@@ -254,6 +254,18 @@ class DropboxUI(DropboxClient):
                               font=self.font,
                               command=self.window_loadFiles.destroy)
         btnCancel.place(relx=0.92, rely=0.92, anchor='center')
+
+    def downloadFile(self):
+        '''Download a file from dropbox account'''
+        for i in self.selected:
+            file_name = self.tree.item(i)['text'].strip()
+            folder_name = f'{self.files_dict[file_name]}'
+
+            # Fixed deleting files
+            if folder_name != '/':
+                folder_name = f'{folder_name}/'
+
+            self.download(f'{self.user_path}/{file_name}', f'{folder_name}{file_name}')
 
     def tree_selected(self, event):
         '''Tree selected event item'''
