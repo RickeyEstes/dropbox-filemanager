@@ -331,12 +331,12 @@ class DropboxUI(DropboxClient):
         entryPath.place(relx=0.23, rely=0.2)
 
         labelUploadPath = tk.Label(self.window_settings, text='Upload PATH',
-                             font=self.font)
+                                   font=self.font)
         labelUploadPath.place(relx=0.05, rely=0.31)
 
         # Enter the user path
         entryUploadPath = tk.Entry(self.window_settings, bd=2,
-                             font=self.font, width=30)
+                                   font=self.font, width=30)
         if self.upload_path:
             entryUploadPath.insert(0, self.upload_path)
         entryUploadPath.place(relx=0.23, rely=0.3)
