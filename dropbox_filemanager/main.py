@@ -75,7 +75,7 @@ class DropboxUI(DropboxClient):
         self.master.geometry('%dx%d+%d+%d' % (self.w, self.h, x, y))
 
     def dropboxLogo(self):
-        '''Create a welcome postgreSQL logo'''
+        '''Create a welcome PostgreSQL logo'''
         logo = Image.open(f'{self.path_lib}/logo.png')
         welcome = ImageTk.PhotoImage(logo)
         welcomeLabel = tk.Label(self.frame, image=welcome)
@@ -118,7 +118,7 @@ class DropboxUI(DropboxClient):
         btn.place(relx=0.5, rely=0.45, anchor='center')
 
     def btnQuit(self):
-        '''Handle load button'''
+        '''Handle quit button'''
         btn = tk.Button(self.frame, text='Quit', width=6,
                         height=1, relief='raised', bd=2,
                         font=self.font, fg='white', bg='grey',
@@ -470,7 +470,7 @@ class DropboxUI(DropboxClient):
             'font_size': 12,
             'font_name': 'Arial'
             }
-        # Publix the configuration
+        # Public the configurations
         self.publicConfigs()
 
     def publicConfigs(self):
@@ -516,7 +516,7 @@ class DropboxUI(DropboxClient):
     def connect_to_account(self):
         '''Checking if connected to the account by APP KEY'''
         error = self.connect(self.app_key)
-        if error == None:
+        if error is None:
             pass
         else:
             self.msgBoxError('Error:', error)
