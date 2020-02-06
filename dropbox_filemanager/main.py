@@ -543,9 +543,9 @@ class DropboxUI(DropboxClient):
         labelBased.place(relx=0.2, rely=0.4)
 
         labelCopy = tk.Label(self.window_about,
-                             text='Copyright 2019 © Dimitris Zlatanidis',
+                             text='Copyright 2019-2020 © Dimitris Zlatanidis',
                              font=('Arial', '12', 'italic'))
-        labelCopy.place(relx=0.195, rely=0.6)
+        labelCopy.place(relx=0.145, rely=0.6)
 
         btnClose = tk.Button(self.window_about, text='Close', width=5,
                              height=1, relief='raised', bd=2,
@@ -568,6 +568,7 @@ def main():
     root.bind("<Escape>", exit)
     DropboxUI(root)
     root.mainloop()
+
 
 if __name__ == '__main__':
     main()
