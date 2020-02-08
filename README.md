@@ -2,7 +2,12 @@
     <a href="https://badge.fury.io/py/dropbox-filemanager">
         <img src="https://badge.fury.io/py/dropbox-filemanager.svg" alt="Package Version">
     </a>
-    
+    <a href="https://badge.fury.io/py/dropbox-filemanager">
+        <img src="https://travis-ci.org/dslackw/dropbox-filemanager.svg?branch=master" alt="build">
+    </a>
+    <a href="https://opensource.org/licenses/MIT">
+        <img src="https://img.shields.io/badge/License-MIT-brightgreen.svg" alt="License">
+    </a>
 </p>
 
 
