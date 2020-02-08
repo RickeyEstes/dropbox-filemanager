@@ -99,7 +99,7 @@ class DropboxUI(DropboxClient):
         menubar.add_cascade(label='Edit', menu=editmenu)
 
         helpmenu = tk.Menu(menubar, font=self.font, tearoff=0)
-        helpmenu.add_command(label='License', command='')
+        helpmenu.add_command(label='License', command=self.license)
         helpmenu.add_command(label='About', command=self.about)
         menubar.add_cascade(label='Help', menu=helpmenu)
 
@@ -520,6 +520,27 @@ class DropboxUI(DropboxClient):
             pass
         else:
             self.msgBoxError('Error:', error)
+
+    def license(self):
+        '''License window'''
+        self.window_license = tk.Toplevel()
+        self.window_license.resizable(0, 0)
+        self.window_license.title('License')
+        self.window_license.iconphoto(False, self.img)
+        self.window_license.config(width=400, height=300)
+        text_license = ("Copyright 2019 - Dimitris Zlatanidis\n\n"
+                        "The MIT License\n"
+                        "https://opensource.org/licenses/MIT")
+
+        labelName = tk.Label(self.window_license, text=text_license,
+                             fg='black', font=('Arial', '12'))
+        labelName.place(relx=0.17, rely=0.1)
+
+        btnClose = tk.Button(self.window_license, text='Close', width=5,
+                             height=1, relief='raised', bd=2,
+                             font=self.font,
+                             command=self.window_license.destroy)
+        btnClose.place(relx=0.5, rely=0.9, anchor='center')
 
     def about(self):
         '''About window'''
