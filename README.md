@@ -17,7 +17,7 @@
 
 
 ##### About
-Dropbox filemanager it's an application to interact
+Dropbox file manager it's a GUI application to interact
 with your dropbox account.
 
 
