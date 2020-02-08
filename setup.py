@@ -6,6 +6,7 @@ try:
     from setuptools import setup
 except ImportError:
     from distutils.core import setup
+from dropbox_filemanager.version import __version__
 
 
 install_requires = [
@@ -16,7 +17,7 @@ setup(
     name='dropbox-filemanager',
     packages=['dropbox_filemanager'],
     scripts=['bin/dropbox-filemanager'],
-    version='1.0.1',
+    version=__version__,
     description="An application to manage files in dropbox account",
     long_description=open('README.md').read(),
     keywords=['file', 'manager', 'dropbox'],

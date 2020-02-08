@@ -52,5 +52,6 @@ class DropboxClient:
         metadata = self.dbx.files_list_folder(path='', recursive=True)
         for m in metadata.entries:
             if isinstance(m, dropbox.files.FileMetadata):
-                file_list.append(f'{m.path_display}, {m.name}, {m.client_modified}, {m.size}')
+                file_list.append(f'{m.path_display}, {m.name},'
+                                 f'{m.client_modified}, {m.size}')
         return file_list
