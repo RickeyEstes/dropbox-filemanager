@@ -1,4 +1,14 @@
-# Dropbox filemanager 1.0.2
+<p align="left">
+    <a href="https://badge.fury.io/py/dropbox-filemanager">
+        <img src="https://badge.fury.io/py/dropbox-filemanager.svg" alt="Package Version">
+    </a>
+    
+</p>
+
+
+## Project description
+
+### `Dropbox filemanager 1.0.2`
 
 
 ##### About
