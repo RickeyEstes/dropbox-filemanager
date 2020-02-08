@@ -20,5 +20,5 @@ with your dropbox account.
 
 
 ##### Copyright
-Copyright 2014-2019 © Dimitris Zlatanidis.
+Copyright 2019-2020 © Dimitris Zlatanidis.
 
