@@ -127,13 +127,11 @@ class DropboxUI(DropboxClient):
 
     def openFiles(self):
         '''Choosing files for uploading'''
-        filenames = filedialog.askopenfilenames(
-                                                initialdir=f'{self.user_path}',
+        filenames = filedialog.askopenfilenames(initialdir=f'{self.user_path}',
                                                 multiple=True,
                                                 title='Select files',
                                                 filetypes=[
-                                                    ('all files', ['*.*'])]
-                                                )
+                                                    ('all files', ['*.*'])])
         if filenames:
             # Connect to the dropbbox account
             self.connect_to_account()
@@ -577,9 +575,6 @@ class DropboxUI(DropboxClient):
     def quit(self):
         '''Destroy master window and quit'''
         self.master.destroy()
-
-    def test(self):
-        pass
 
 
 def main():
